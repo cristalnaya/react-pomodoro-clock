@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class LengthControl extends Component {
-  render() {
-    const { minSession, incrementSession, decrementSession, minBreak, incrementBreak, decrementBreak } = this.props;
+const LengthControl = ({ minSession, incrementSession, decrementSession, minBreak, incrementBreak, decrementBreak }) => {
     return (
       <div>
         <div className="length-control">
@@ -40,7 +38,6 @@ class LengthControl extends Component {
         </div>
       </div>
     )
-  }
 }
 
 export default LengthControl;
