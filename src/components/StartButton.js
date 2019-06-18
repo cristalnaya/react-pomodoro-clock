@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class StartButton extends Component {
-  render() {
-    
-    const { start, reset, startOn } = this.props;
+const StartButton = ({ start, reset, startOn, setRef }) => {
     return (
       <div className="buttons-panel">
         <i id="start_stop" className={`fas ${startOn ? 'fa-pause' : 'fa-play'} fa-2x`} onClick={start}></i>
@@ -12,11 +9,10 @@ class StartButton extends Component {
           id="beep" 
           src="audio/beep.wav" 
           preload='auto' 
-          ref={audio => {this.audio = audio}}
+          ref={setRef}
         />
       </div>
     )
-  }
 }
 
 export default StartButton;

@@ -1,81 +1,127 @@
 import React, { Component } from 'react';
 import './App.css';
-// import ms from 'pretty-ms';
 import LengthControl from './components/LengthControl';
 import Timer from './components/Timer';
 import StartButton from './components/StartButton';
+
+let start = '';
+
 class App extends Component {
   constructor(props) {
     super(props)
   
     this.state = {
-       time: 0,
-       start: 0,
-       show: true,
-       seconds: '00',
-       minSession: '25',
-       minBreak: '5',
+       breakOn: false,
+       sessionOn: false,
+       minutes: 25,
+       seconds: 0,
+       minSession: 25,
+       minBreak: 5,
     }
-    this.handleChange = this.handleChange.bind(this);
+    this.audio = React.createRef();
     this.incrementSession = this.incrementSession.bind(this);
     this.incrementBreak = this.incrementBreak.bind(this);
     this.decrementSession = this.decrementSession.bind(this);
     this.decrementBreak = this.decrementBreak.bind(this);
   }
 
-  handleChange = (event) => {
-    this.setState({
-      minSession: event.target.value,
-      minBreak: event.target.value,
-    });
-  }
-
   incrementSession = () => {
     const { minSession } = this.state;
     this.setState({
-          minSession: Math.floor(parseInt(minSession)) + 1,
+          minSession: minSession !== 60 ? minSession + 1 : 60,
+          minutes: minSession !== 60 ? minSession + 1 : 60
     });
   }
 
   incrementBreak = () => {
     const { minBreak } = this.state;
     this.setState({
-          minBreak: Math.floor(parseInt(minBreak)) + 1
-    })
+      minBreak: minBreak !== 60 ? minBreak + 1 : 60
+    });
   }
 
   decrementSession = () => {
     const { minSession } = this.state;
     this.setState({
-      minSession: Math.floor(parseInt(minSession)) - 1,
-    })
+      minSession: minSession !== 1 ? minSession - 1 : 1,
+      minutes: minSession !== 1 ? minSession - 1 : 1
+    });
   }
 
   decrementBreak = () => {
     const { minBreak } = this.state;
     this.setState({
-      minBreak: Math.floor(parseInt(minBreak)) - 1
+      minBreak: minBreak !== 1 ? minBreak - 1 : 1
     })
   }
   
+  resetSession = () => {
+    this.setState({
+      breakOn: false,
+      sessionOn: false,
+      minutes: 25,
+      seconds: 0,
+      minSession: 25,
+      minBreak: 5,
+    });
+    clearInterval(start);
+    this.audio.current.pause();
+    this.audio.current.currentTime = 0;
+  }
+
+  startSession = () => {
+    this.setState({
+      sessionOn: !this.state.sessionOn 
+    });
+    if(!(this.state.sessionOn)) {
+      start = setInterval(() => {
+        if(this.state.seconds === 0 && this.state.minutes !== 0) {
+          this.setState({ 
+            minutes: this.state.minutes - 1,
+            seconds: 59 
+          });
+        } else if(this.state.seconds !== 0){
+          this.setState({ 
+            seconds: this.state.seconds - 1 
+          });
+        }
+        else {
+          this.audio.current.play();
+          this.setState({ 
+            minutes: this.state.breakOn ? this.state.minSession : this.state.minBreak,
+            seconds: 0,
+            breakOn: !this.state.breakOn 
+          });
+        }
+      }, 1000);
+    } else {
+      clearInterval(start);
+    }   
+  }
+  
   render() {
-    const { minSession, seconds, minBreak } = this.state;
+    const { minSession, minBreak, sessionOn, breakOn, minutes, seconds } = this.state;
 
     return (
       <div className="App">
        <Timer 
-       minSession={minSession}
-       seconds={seconds}
+        minutes={minutes}
+        seconds={seconds}
+        start={breakOn}
        />
-       <StartButton />
+       <StartButton
+        start={this.startSession}
+        reset={this.resetSession}
+        startOn={sessionOn}
+        setRef={this.audio}
+        />
        <LengthControl
-       minBreak={minBreak}
-       minSession={minSession}
-       onChange={this.handleChange}
-       incrementSession={this.incrementSession}
-       incrementBreak={this.incrementBreak}
-       decrementSession={this.decrementSession}
-       decrementBreak={this.decrementBreak}
+        minBreak={minBreak}
+        minSession={minSession}
+        incrementSession={!sessionOn ? this.incrementSession : null}
+        incrementBreak={!sessionOn ? this.incrementBreak : null}
+        decrementSession={!sessionOn ? this.decrementSession : null}
+        decrementBreak={!sessionOn ? this.decrementBreak : null}
        />
       </div>
     );
@@ -83,4 +129,3 @@ class App extends Component {
 }
 
 export default App;
-
