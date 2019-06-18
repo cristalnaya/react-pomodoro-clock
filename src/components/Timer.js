@@ -4,11 +4,14 @@ class Timer extends Component {
   
   
   render() {
-    const { minSession, seconds } = this.props;
+    const { minutes, seconds, start } = this.props;
     return (
       <div>
-        <div id="timer-label">Time to Focus!</div>
-        <div id="timer-left">{minSession} : {seconds}</div>
+        <h1>Pomodoro Timer</h1>
+        <div className="timer">
+          <div id="timer-label">{start ? 'Rest' : 'Focus'}</div>
+          <div id="time-left">{minutes < 10 ? '0' + minutes : minutes}:{seconds === 0 ? '00' : seconds < 10 ? '0' + seconds : seconds}</div>
+        </div>
       </div>
     )
   }
