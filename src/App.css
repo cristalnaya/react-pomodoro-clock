@@ -3,7 +3,8 @@
   margin: 0;
 }
 
-body, html {
+body,
+html {
   height: 100vh;
   background: #ffe259;
   background: -webkit-linear-gradient(to right, #ffa751, #ffe259);
@@ -28,6 +29,12 @@ h1 {
   text-align: center;
   color: #808000;
   font-weight: 700;
+}
+
+#root {
+  border: 8px solid #ffa400;
+  border-radius: 10px;
+  padding: 1rem 2rem;
 }
 
 .timer {
@@ -63,12 +70,15 @@ h1 {
   justify-content: space-around;
 }
 
-#start_stop, #reset {
+#start_stop,
+#reset {
   padding: 10px;
   color: #808000;
 }
 
-#start_stop:hover, #reset:hover, button:hover {
+#start_stop:hover,
+#reset:hover,
+button:hover {
   transform: scale(1.2);
 }
 
@@ -84,10 +94,14 @@ button {
 }
 
 @media screen and (max-width: 575px) {
+  #root {
+    padding: 0;
+  }
+
   h1 {
     margin: 1rem auto;
     font-size: 2rem;
-    
+
   }
 
   .timer {
